@@ -2,6 +2,8 @@
 
 from modules.db.mongodb import get_db_mumshoppe
 from pymongo import ReturnDocument
+from bson import json_util
+import json
 
 import uuid
 
@@ -37,8 +39,14 @@ router = APIRouter(
 
 
 @router.get("/list", status_code=status.HTTP_200_OK)
-async def get_bundles():
-    return {"name": 'Gary'}
+async def get_bundles(response: Response):
+    try:
+        bundle_collection = get_db_mumshoppe().bundles.find()
+        return json.loads(json_util.dumps(bundle_collection))
+    except Exception as e:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        print('Failed to list bundles', e)
+        return None
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
