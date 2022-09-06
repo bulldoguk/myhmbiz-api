@@ -15,7 +15,7 @@ class User(BaseModel):
 
 router = APIRouter(
     prefix="/user",
-    tags=["user"],
+    tags=["common_user"],
     responses={404: {"description": "Not found"}}
 )
 
