@@ -7,6 +7,15 @@
     "credits": [{ "optionid": "section1", "credits": 1, "default": "flowerback1" }]
 }
     
+{
+    "type": "mum",
+    "size": "single",
+    "description": "6.5 Flower with traditional loops",
+    "price": 70,
+    "credits": [{ "optionid": "section1", "credits": 1, "default": "flowerback1" }]
+}
+
+
 
 {
 "list": [
