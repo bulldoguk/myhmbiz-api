@@ -9,7 +9,7 @@ import uuid
 
 from typing import Optional
 
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 
 

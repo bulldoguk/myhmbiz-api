@@ -1,14 +1,15 @@
 # main.py
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from routers import user, bundles, options, orders, shoppes
+from modules.apikey import checkkey
 
-app = FastAPI()
+app = FastAPI(dependencies=[Depends(checkkey.verify_key)])
 
 # Common
 app.include_router(user.router)
 
-# Mum Shoppes
+# Mum Shoppesß
 app.include_router(shoppes.router)
 app.include_router(bundles.router)
 app.include_router(options.router)
