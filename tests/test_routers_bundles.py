@@ -1,17 +1,7 @@
 from routers import bundles
 import pytest
 from fastapi.testclient import TestClient
-from fastapi import FastAPI
-
-
-class MockBackendServer(FastAPI):
-
-    def __init__(self):
-        super().__init__(title='mock', version='0.0.1')
-
-        @self.get('/{fn}', response_model=BackendResponse)
-        def mock_backend(request: Request, fn: str) -> BackendResponse:
-            return BackendResponse(data={'output': 'mock', 'function': fn})
+from .server_mock.backend import MockBackendServer
 
 
 server = MockBackendServer()
@@ -35,5 +25,9 @@ def test_constructor(credit, bundle):
 
 def test_get():
     """Should give a list of bundles"""
-    response = client.get("/bundles/list")
+    response = client.get("/list")
+    detail_response = response.json()
     assert response.status_code == 200
+    assert detail_response['data']['output'] == 'mock'
+
+
