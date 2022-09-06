@@ -67,9 +67,17 @@ async def add_bundle(bundle: Bundle, response: Response):
         return {"Error": e}
 
 
-@router.patch("/", status_code=status.HTTP_202_ACCEPTED)
-async def update_bundle(bundle: Bundle, response: Response):
-    if not bundle.id:
+@router.patch("/{bundle_id}", status_code=status.HTTP_202_ACCEPTED)
+async def update_bundle(bundle_id: str, bundle: Bundle, response: Response):
+    try:
+        event_collection = get_db_mumshoppe().bundles
+        record = event_collection.find_one_and_update(
+            {"guid": bundle_id},
+            {"$set": bundle.dict()},
+            upsert=True,
+            return_document=ReturnDocument.AFTER)
+        del record["_id"]
+        return record
+    except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return "Bundle ID is missing"
-    return bundle
+        return {"Unable to update bundle": e}
