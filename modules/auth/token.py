@@ -1,30 +1,22 @@
-from flask import request, jsonify
+from fastapi import Header, HTTPException, status
 import requests
 
 
-def token_required(headers):
-    token = None
-
-    if headers:
-        token = headers
-
-    if not token:
-        print(f'Kicking back token {token}')
-        return jsonify({'result': False, 'message': 'a valid token is missing'})
+async def token_required(x_token: str = Header()):
+    if not x_token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='No token provided')
 
     try:
-        encoded = token.split()[1]
+        encoded = x_token.split()[1]
         uri = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + encoded
-        # TODO: Need to find a way to cache this request to reduce hits on Google APIS
         validate = requests.get(uri).json()
-        # TODO: So what happens if the token does not exist?
         if int(validate.get('expires_in')) > 0 and validate.get('email_verified') == 'true':
-            return jsonify({'result': True, 'message': 'success'})
+            #TODO: This is where we need to create our own JWT access token
+            return True
         else:
-            return jsonify({'result': False, 'message': 'Token not valid'})
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
     except:
-        print('Failed to decode')
-        return jsonify({'result': False, 'message': 'token is invalid'})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Internal server error')
 
 
 class AccessToken:

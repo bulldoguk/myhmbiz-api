@@ -1,6 +1,7 @@
-# user.py
+# bundles.py
 
 from modules.db.mongodb import get_db_mumshoppe
+from modules.auth import token
 from pymongo import ReturnDocument
 from bson import json_util
 import json
