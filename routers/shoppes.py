@@ -1,5 +1,6 @@
 # shoppes.py
 
+from dataclasses import replace
 from modules.db.mongodb import get_db_mumshoppe
 from pymongo import ReturnDocument
 from bson import json_util
@@ -20,6 +21,7 @@ class Shoppe(BaseModel):
     contact_name: Optional[str]
     contact_phone: Optional[str]
     notes: Optional[str]
+    slug: Optional[str]
 
 
 router = APIRouter(
@@ -49,6 +51,8 @@ async def add_shoppe(shoppe: Shoppe, response: Response):
         shoppes_collection = get_db_mumshoppe().shoppes
         if not shoppe.guid:
             shoppe.guid = str(uuid.uuid4())
+        if not shoppe.slug:
+            shoppe.slug = str.replace(shoppe.title, ' ', '_')
         record = shoppes_collection.find_one_and_update(
             {"guid": shoppe.guid},
             {"$set": shoppe.dict()},
@@ -66,6 +70,8 @@ async def add_shoppe(shoppe: Shoppe, response: Response):
 async def update_shoppe(shoppe_id: str, shoppe: Shoppe, response: Response):
     try:
         shoppes_collection = get_db_mumshoppe().shoppes
+        if not shoppe.slug:
+            shoppe.slug = str.replace(shoppe.title, ' ', '_')
         record = shoppes_collection.find_one_and_update(
             {"guid": shoppe_id},
             {"$set": shoppe.dict()},

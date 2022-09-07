@@ -40,10 +40,12 @@ router = APIRouter(
 )
 
 
-@router.get("/list", status_code=status.HTTP_200_OK)
-async def get_bundles(response: Response):
+@router.get("/list/{shoppe_id}", status_code=status.HTTP_200_OK)
+async def get_bundles(shoppe_id: str, response: Response):
     try:
-        bundle_collection = get_db_mumshoppe().bundles.find()
+        bundle_collection = get_db_mumshoppe().bundles.find({
+            "shoppe_guid": shoppe_id
+        })
         return json.loads(json_util.dumps(bundle_collection))
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST

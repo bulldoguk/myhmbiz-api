@@ -38,10 +38,12 @@ router = APIRouter(
 # TODO: CRUD for option items
 
 
-@router.get("/list", status_code=status.HTTP_200_OK)
-async def get_section(response: Response):
+@router.get("/list/{shoppe_id}", status_code=status.HTTP_200_OK)
+async def get_section(shoppe_id: str, response: Response):
     try:
-        section_collection = get_db_mumshoppe().options.find()
+        section_collection = get_db_mumshoppe().options.find({
+            "shoppe_guid": shoppe_id
+        })
         return json.loads(json_util.dumps(section_collection))
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
