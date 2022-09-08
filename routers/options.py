@@ -73,6 +73,7 @@ async def add_section(section: Section, response: Response):
 @router.patch("/{section_id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_section(section_id: str, section: Section, response: Response):
     try:
+        print(section.dict())
         section_collection = get_db_mumshoppe().sections
         record = section_collection.find_one_and_update(
             {"guid": section_id},
