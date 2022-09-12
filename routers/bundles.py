@@ -1,5 +1,6 @@
 # bundles.py
 
+from operator import truediv
 from modules.db.mongodb import get_db_mumshoppe
 from modules.auth import token
 from pymongo import ReturnDocument
@@ -23,6 +24,7 @@ class Credit(BaseModel):
 class Bundle(BaseModel):
     guid: Optional[str] = None
     shoppe_guid: str
+    position: int = 0
     type: str
     size: str
     description: str
@@ -86,3 +88,16 @@ async def update_bundle(bundle_id: str, bundle: Bundle, response: Response):
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"Unable to update bundle": e}
+
+
+@router.delete('/{bundle_id}', status_code=status.HTTP_202_ACCEPTED)
+async def delete_bundle(bundle_id: str, response: Response):
+    try:
+        bundle_collection = get_db_mumshoppe().bundles
+        record = bundle_collection.find_one_and_delete(
+            {"guid": bundle_id},
+        )
+        return True
+    except Exception as e:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"Unable to delete bundle": e}
