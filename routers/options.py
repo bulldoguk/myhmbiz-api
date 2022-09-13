@@ -41,7 +41,7 @@ router = APIRouter(
 @router.get("/list/{shoppe_id}", status_code=status.HTTP_200_OK)
 async def get_section(shoppe_id: str, response: Response):
     try:
-        section_collection = get_db_mumshoppe().options.find({
+        section_collection = get_db_mumshoppe().sections.find({
             "shoppe_guid": shoppe_id
         })
         return json.loads(json_util.dumps(section_collection))
@@ -54,7 +54,7 @@ async def get_section(shoppe_id: str, response: Response):
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def add_section(section: Section, response: Response):
     try:
-        section_collection = get_db_mumshoppe().options
+        section_collection = get_db_mumshoppe().sections
         if not section.guid:
             section.guid = str(uuid.uuid4())
         record = section_collection.find_one_and_update(
@@ -86,4 +86,17 @@ async def update_section(section_id: str, section: Section, response: Response):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"Unable to update options": e}
 
-#TODO: For each option in a section, if there is no GUID, need to add one before insert / update on that record
+# TODO: For each option in a section, if there is no GUID, need to add one before insert / update on that record
+
+
+@router.delete('/{section_id}', status_code=status.HTTP_202_ACCEPTED)
+async def delete_section(section_id: str, response: Response):
+    try:
+        section_collection = get_db_mumshoppe().sections
+        record = section_collection.find_one_and_delete(
+            {"guid": section_id},
+        )
+        return True
+    except Exception as e:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"Unable to delete section": e}
