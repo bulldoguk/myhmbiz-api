@@ -81,7 +81,7 @@ async def add_section(section: Section, response: Response):
 async def update_section(section_id: str, section: Section, response: Response):
     try:
         for detail in section.options:
-            if detail.optionguid == None:
+            if detail.optionguid == None or detail.optionguid == '':
                 detail.optionguid = str(uuid.uuid4())
         
         section_collection = get_db_mumshoppe().sections
