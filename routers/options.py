@@ -16,6 +16,7 @@ class Option(BaseModel):
     optionguid: Optional[str] = None
     name: str
     price: float
+    position: Optional[int] = 0
 
 
 class Section(BaseModel):
@@ -24,6 +25,7 @@ class Section(BaseModel):
     title: str
     notes: Optional[str]
     options: list[Option]
+    position: Optional[int] = 0
 
 
 router = APIRouter(
@@ -44,7 +46,9 @@ async def get_section(shoppe_id: str, response: Response):
         section_collection = get_db_mumshoppe().sections.find({
             "shoppe_guid": shoppe_id
         })
-        return json.loads(json_util.dumps(section_collection))
+        record = json.loads(json_util.dumps(section_collection))
+        del record["_id"]
+        return record
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
         print('Failed to list options', e)
@@ -57,6 +61,11 @@ async def add_section(section: Section, response: Response):
         section_collection = get_db_mumshoppe().sections
         if not section.guid:
             section.guid = str(uuid.uuid4())
+
+        for detail in section:
+            if len(detail.guid) == 0 or not detail.guid:
+                detail.guid = str(uuid.uuid4())
+
         record = section_collection.find_one_and_update(
             {"guid": section.guid},
             {"$set": section.dict()},
@@ -73,7 +82,10 @@ async def add_section(section: Section, response: Response):
 @router.patch("/{section_id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_section(section_id: str, section: Section, response: Response):
     try:
-        print(section.dict())
+        for detail in section:
+            if len(detail.guid) == 0 or not detail.guid:
+                detail.guid = str(uuid.uuid4())
+                
         section_collection = get_db_mumshoppe().sections
         record = section_collection.find_one_and_update(
             {"guid": section_id},
