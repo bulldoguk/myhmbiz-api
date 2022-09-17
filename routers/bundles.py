@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 
 class Credit(BaseModel):
-    sectionguid: Optional[str]
+    sectionguid: str
     credits: int
     default: str
 
@@ -24,7 +24,7 @@ class Credit(BaseModel):
 class Bundle(BaseModel):
     guid: Optional[str] = None
     shoppe_guid: str
-    position: int = 0
+    position: Optional[int] = 0
     type: str
     size: str
     description: str
