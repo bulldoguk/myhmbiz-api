@@ -18,7 +18,7 @@ from pydantic import BaseModel
 class Credit(BaseModel):
     sectionguid: str
     credits: int
-    default: str
+    default: Optional[str] = None
 
 
 class Bundle(BaseModel):
