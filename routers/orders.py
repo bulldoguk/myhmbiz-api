@@ -19,6 +19,7 @@ from pydantic import BaseModel
 class Customer(BaseModel):
     email: str
     name: str
+    orderTitle: str
     KHSBandMember: Optional[bool] = False
     KHSBandMemberColorGuard: Optional[bool] = False
     OKToText: Optional[bool] = False
@@ -72,12 +73,14 @@ class Section(BaseModel):
 
 class Order(BaseModel):
     guid: Optional[str] = None
+    status: Optional[str] = 'draft'
     shoppe_guid: str
     customer: Customer
     ribbonNames: Optional[RibbonNames] = None
     bundle: Optional[Bundle] = None
     options: list[Section]
     notes: Optional[str]
+    shoppeInfo: Optional[list] = None
 
 
 router = APIRouter(
@@ -106,10 +109,23 @@ async def get_order(response: Response):
 @router.get("/listByCustomer", status_code=status.HTTP_200_OK)
 async def get_orders_by_customer(email: str, response: Response):
     try:
-        order_collection = get_db_mumshoppe().orders.find(
-            {"customer.email": email}
-        )
-        return json.loads(json_util.dumps(order_collection))
+        order_collection = get_db_mumshoppe().orders.aggregate([
+            {
+                '$lookup': {
+                    'from': 'shoppes', 
+                    'localField': 'shoppe_guid', 
+                    'foreignField': 'guid', 
+                    'as': 'shoppeInfo'
+                }
+            }, {
+                '$limit': 1
+            }
+        ])
+        # order_collection = get_db_mumshoppe().orders.find(
+         #   {"customer.email": email}
+        # 
+        result = json.loads(json_util.dumps(order_collection))
+        return result
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None

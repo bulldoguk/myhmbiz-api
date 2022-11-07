@@ -15,6 +15,7 @@ from pydantic import BaseModel
 class Option(BaseModel):
     optionguid: Optional[str] = None
     name: str
+    subsection: Optional[str] = ''
     price: float
     position: Optional[int] = 0
 
