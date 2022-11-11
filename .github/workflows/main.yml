@@ -32,5 +32,5 @@ jobs:
           pip install -r requirements.txt
           export MONGODB=${{ secrets.MONGODB }}
           export DEVELOPMENT=False
-
-          
+          env
+          python main.py
