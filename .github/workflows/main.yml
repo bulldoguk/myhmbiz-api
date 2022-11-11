@@ -31,6 +31,6 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          export MONGODB=${{ secrets.MONGODB }}
-          export DEVELOPMENT=False
-          
+          echo MONGODB=${{ secrets.MONGODB }} > .env
+          echo DEVELOPMENT=False >> .env
+          echo APIKEY={teFmseoVnj@/Xz#9>OamT7.WB*N,*5w!,g=I|9WZK;.UQXe$VDyz1X=cT%:ncJ >> .env

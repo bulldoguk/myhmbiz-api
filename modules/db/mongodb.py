@@ -1,11 +1,12 @@
 from modules.db.schema import template
 from pymongo import MongoClient
+from decouple import config
 from os import environ
 
 # connect to MongoDB, change the << MONGODB URL >> to reflect your own connection string
 # mongodb://myhmbizAPI:mQD924hA4JIT19DG@50.116.28.186:27017/myhmbiz_common?tls=true&directConnection=true&authMechanism=DEFAULT&authSource=admin&tlsInsecure=true
 # 'mongodb+srv://myhmbizAPI:mQD924hA4JIT19DG@cluster0.gcoozxh.mongodb.net/?retryWrites=true&w=majority', tls=True, tlsAllowInvalidCertificates=True
-client = MongoClient(environ['MONGODB'])
+client = MongoClient(config('MONGODB'))
 
 db_common = client.myhmbiz_common
 # Issue the serverStatus command and print the results
