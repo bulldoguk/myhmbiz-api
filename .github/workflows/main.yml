@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: SSH and deploy node app
+    - name: SSH and deploy python API app
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOSTIP }}
@@ -29,4 +29,5 @@ jobs:
           git pull https://github.com/bulldoguk/myhmbiz-api.git main
           source .venv/bin/activate
           pip install -r requirements.txt
+          
           
