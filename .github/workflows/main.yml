@@ -33,4 +33,4 @@ jobs:
           pip install -r requirements.txt
           echo MONGODB=${{ secrets.MONGODB }} > .env
           echo DEVELOPMENT=False >> .env
-          echo APIKEY={teFmseoVnj@/Xz#9>OamT7.WB*N,*5w!,g=I|9WZK;.UQXe$VDyz1X=cT%:ncJ >> .env
+          echo "APIKEY={teFmseoVnj@/Xz#9>OamT7.WB*N,*5w!,g=I|9WZK;.UQXe$VDyz1X=cT%:ncJ" >> .env
