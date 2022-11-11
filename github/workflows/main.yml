@@ -27,3 +27,6 @@ jobs:
         script: |
           cd ~/myhmbiz-api
           git pull https://github.com/bulldoguk/myhmbiz-api.git main
+          source .venv/bin/activate
+          pip install -r requirements.txt
+          
