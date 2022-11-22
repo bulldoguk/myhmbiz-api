@@ -15,16 +15,10 @@ else:
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "https://mumshoppe.myhmbiz.com"
+    "https://mumshoppe.myhmbiz.com",
 ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+origins = ["*"]
 
 # Common
 app.include_router(user.router)
@@ -39,6 +33,15 @@ app.include_router(orders.router)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 if __name__ == "__main__":
