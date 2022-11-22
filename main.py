@@ -15,6 +15,7 @@ else:
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "https://mumshoppe.myhmbiz.com"
 ]
 
 app.add_middleware(
