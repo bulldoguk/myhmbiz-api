@@ -37,7 +37,7 @@ router = APIRouter(
     tags=["mumshoppe_bundles"],
     responses={
         404: {"description": "Not found"},
-        400: {"description": "Invalid request"}
+        400: {"description": "Invalid request - this is in the bundle"}
     }
 )
 
@@ -52,7 +52,7 @@ async def get_bundles(shoppe_id: str, response: Response):
     except Exception as e:
         response.status_code = status.HTTP_400_BAD_REQUEST
         print('Failed to list bundles', e)
-        return None
+        return {"Unable to GET bundles": e}
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
